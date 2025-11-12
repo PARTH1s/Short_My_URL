@@ -3,7 +3,7 @@ import { AppError } from "../utils/errors/app.error";
 
 export const appErrorHandler = (err: AppError, req: Request, res: Response, next: NextFunction) => {
 
-    console.log(err);
+    console.log("Error in app handler", err);
 
     res.status(err.statusCode).json({
         success: false,
@@ -12,7 +12,7 @@ export const appErrorHandler = (err: AppError, req: Request, res: Response, next
 }
 
 export const genericErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log(err);
+    console.log("Generic error handler", err);
 
     res.status(500).json({
         success: false,

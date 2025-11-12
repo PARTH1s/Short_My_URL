@@ -24,7 +24,7 @@ export const validateRequestBody = (schema: AnyZodObject) => {
                 success: false,
                 error: error
             });
-            
+
         }
     }
 }
@@ -44,13 +44,13 @@ export const validateQueryParams = (schema: AnyZodObject) => {
 
         } catch (error) {
             // If the validation fails, 
-
+            logger.error("Query params are invalid");
             res.status(400).json({
                 message: "Invalid query params",
                 success: false,
                 error: error
             });
-            
+
         }
     }
 }

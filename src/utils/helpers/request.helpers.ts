@@ -4,10 +4,12 @@ type AsyncLocalStorageType = {
     correlationId: string;
 }
 
-export const asyncLocalStorage = new AsyncLocalStorage<AsyncLocalStorageType>(); // Created an instance of AsyncLocalStorage
+// creating an instance of async local storage 
+export const asyncLocalStorage = new AsyncLocalStorage<AsyncLocalStorageType>();  
 
-
+// Function to get the correlation id from the async local storage 
 export const getCorrelationId = () => {
     const asyncStore = asyncLocalStorage.getStore();
-    return asyncStore?.correlationId || 'unknown-error-while-creating-correlation-id'; // Default value if not found 
+    return asyncStore?.correlationId || 'unknown-error-while-creating-correlation-id';  
 }
+
