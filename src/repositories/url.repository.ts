@@ -1,3 +1,4 @@
+import logger from '../config/logger.config';
 import { Url, IUrl } from '../models/Url';
 
 export interface CreateUrl {
@@ -17,14 +18,17 @@ export interface UrlStats {
 export class UrlRepository {
     async create(data: CreateUrl): Promise<IUrl> {
         const url = new Url(data);
+        logger.info("Created new url mapping in DB")
         return await url.save();
     }
 
     async findByShortUrl(shortUrl: string): Promise<IUrl | null> {
-        return await Url.findOne({ shortUrl }); 
+        logger.info("Fetching url mapping from DB");
+        return await Url.findOne({ shortUrl });
     }
 
     async findAll() {
+        logger.info("Fetching all the url mappings from DB");
         const urls = await Url.find().select({
             _id: 1,
             originalUrl: 1,
@@ -33,7 +37,7 @@ export class UrlRepository {
             createdAt: 1,
             updatedAt: 1
         }).sort({ createdAt: -1 });
-
+        logger.info("Fetched all url from DB for mapping");
         return urls.map(url => ({
             id: url._id?.toString() || '',
             originalUrl: url.originalUrl,
@@ -45,7 +49,8 @@ export class UrlRepository {
     }
 
     async incrementClicks(shortUrl: string): Promise<void> {
-         await Url.findOneAndUpdate(
+        logger.info("Incrementing click count for short url in DB");
+        await Url.findOneAndUpdate(
             { shortUrl },
             { $inc: { clicks: 1 } }
         );
@@ -53,6 +58,7 @@ export class UrlRepository {
     }
 
     async findStatsByShortUrl(shortUrl: string): Promise<UrlStats | null> {
+        logger.info("Finding Stats by short url from DB");
         const url = await Url.findOne({ shortUrl }).select({
             _id: 1,
             originalUrl: 1,
@@ -63,7 +69,7 @@ export class UrlRepository {
         });
 
         if (!url) return null;
-
+        logger.info("Fetched url status DB for mapping");
         return {
             id: url._id?.toString() || '',
             originalUrl: url.originalUrl,
