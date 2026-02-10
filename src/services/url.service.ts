@@ -42,8 +42,9 @@ export class UrlService {
 
 
     async getOriginalUrl(shortUrl: string) {
+        logger.info("Get Original URL for shor URL." + shortUrl);
         const originalUrl = await this.cacheRepository.getUrlMapping(shortUrl);
-
+        logger.info("Fecthed original URL frim chache for short URL" + originalUrl)
         if (originalUrl) {
             await this.urlRepository.incrementClicks(shortUrl);
 
@@ -54,15 +55,16 @@ export class UrlService {
         }
 
         const url = await this.urlRepository.findByShortUrl(shortUrl);
-
+        logger.info("Fetched original URL from db for short URL" + url)
         if (!url) {
             throw new NotFoundError('URL not found');
         }
 
         await this.urlRepository.incrementClicks(shortUrl);
+        logger.info("Incremented click count for short URL in DB");
 
         await this.cacheRepository.setUrlMapping(shortUrl, url.originalUrl);
-
+        logger.info("Cached original URL for short URL in Redis");
         return {
             originalUrl: url.originalUrl,
             shortUrl
@@ -70,6 +72,7 @@ export class UrlService {
     }
 
     async incrementClicks(shortUrl: string) {
+        logger.info("Incremented click count for short URL in DB");
         await this.urlRepository.incrementClicks(shortUrl);
         return;
     }
